@@ -1,36 +1,91 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# README
 
-## Getting Started
+## Getting started
 
-First, run the development server:
+### Prepare for running app local
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+-   Node.js vesion >= 20.x.x and npm version >= 10.x.x required
+-   Run `npm install`<br />
+-   Run `npm run dev` <br />
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## React Component code styleguide
 
-## Learn More
+### Component structure
 
-To learn more about Next.js, take a look at the following resources:
+    import React, {useEffect, useState, useMemo, useCallback} from 'react';
+    import {useSelector} from 'react-redux';
+    import lib from 'lib';
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+    import {fetchData} from '../fetchData'
+    import {selectList, selectLoading} from '../selectors'
+    import {useAppDispatch} from '../../store';
+    import hooks from './hooks';
+    import utils from './utils';
+    import helper from './helper';
+    import config from './config';
+    import constants from './constants';
+    import Component from './Component';
+    import Button from '../common/Button';
+    import IValues from './types';
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+    const MyComponent = () => {
+        const [editMode, setEditMode] = useState(false);
+        const [values, setValues] = useState<IValues[]>([]);
 
-## Deploy on Vercel
+        const dispatch = useAppDispatch();
+        const list = useSelector(selectList)
+        const isLoading = useSelector(selectLoading(slicesName, thunksName || thunksNames[]));
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+        const valuesIds = useMemo(() => values.map(value => value.id), [values]);
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+        ...hooks, ...localStorage, ...constants;
+
+        const getData = useCallback(() => {}, []);
+
+        const handleClick = useCallback((item) => setValues(item),[]);
+
+        useEffect(() => {
+            dispatch(fetchData());
+        }, [dispatch]);
+
+        return (
+            <>
+                <Component getData={getData} />
+                <Button onClick={handleClick}>Click</Button>
+            </>
+        );
+    };
+
+    export default MyComponent;
+
+### Branch naming
+
+-   Use git-flow for naming branch https://danielkummer.github.io/git-flow-cheatsheet/
+-   Commit message should include branch name.
+
+## Names
+
+-   Use camelCase for type names and enum values
+-   Use camelCase for function and method names
+-   Use camelCase for function and method names
+-   Use whole words in names when possible
+
+## Style
+
+-   Use arrow functions => over anonymous function expressions
+
+## Screenshots
+
+![Home page without values](https://i.postimg.cc/6pTtd1X3/Screenshot-1.png)
+
+![Home page with values](https://i.postimg.cc/TYdRP3Nn/Screenshot-2.png)
+
+![Result page with list of cars models](https://i.postimg.cc/T2qdGD0R/Screenshot-4.png)
+
+![Error page](https://i.postimg.cc/VvRmFxvS/Screenshot-5.png)
+
+![Error message](https://i.postimg.cc/GtrbGLLw/Screenshot-6.png)
